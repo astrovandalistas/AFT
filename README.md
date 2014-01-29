@@ -1,5 +1,4 @@
 An Argument For Technology (AFT)
-Art Hack Day - Afterglow
 -----------------
 
 Dependencies:
