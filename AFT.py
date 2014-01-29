@@ -12,7 +12,7 @@ from string import printable
 from re import sub
 
 ## What to search for
-SEARCH_TERMS = ["@nottoopublic", "#nottoopublic"]
+SEARCH_TERMS = ['i hate you', 'i want to die', 'you are useless', 'kill you', 'we are done', 'over you']
 FESTIVAL_EN = "voice_kal_diphone"
 FESTIVALBIN = "./festival"
 FESTIVALCMD = "echo \"(LANG) (SayText \\\"XXXXX\\\")\" | "
@@ -23,7 +23,7 @@ class TwitterStreamReceiver(TwythonStreamer):
         self.tweetQ = Queue()
     def on_success(self, data):
         ## no re-tweets
-        if ('text' in data):
+        if (('text' in data) and (self.tweetQ.qsize() < 30)):
             self.tweetQ.put(data['text'].encode('utf-8'))
             print "received %s" % (data['text'].encode('utf-8'))
     def on_error(self, status_code, data):
@@ -32,6 +32,9 @@ class TwitterStreamReceiver(TwythonStreamer):
         return self.tweetQ.empty()
     def get(self):
         return self.tweetQ.get()
+    def qsize(self):
+        return self.tweetQ.qsize()
+
 
 def displayPhrase(phrase):
     phrase = phrase.replace('\0',' ')
@@ -72,7 +75,7 @@ def sayPhrase(phrase):
     phrase = phrase.replace(",","").replace(".","").replace("?","").replace("!","")
 
     ## then remove accents and nonAscii characters
-    phrase = _removeNonAscii(phrase.encode('utf-8'))
+    phrase = _removeNonAscii(phrase)
     toSay = (FESTIVALCMD+FESTIVALBIN).replace("LANG",FESTIVAL_EN)
     toSay = toSay.replace("XXXXX",phrase)
     subprocess.call(toSay, shell=True)
@@ -134,28 +137,26 @@ def loop():
     _checkEvent()
     global lastTwitterCheck, myTwitterStream, streamThread
 
-    if(not visualQ.empty()):
-        displayPhrase(visualQ.get())
-    if(not audioQ.empty()):
-        sayPhrase(audioQ.get())
+    if(myTwitterStream.qsize() > 2):
+        tweetA = myTwitterStream.get().lower()
+        tweetV = myTwitterStream.get().lower()
 
-    ## check twitter queue
-    if((time()-lastTwitterCheck > 5) and (not myTwitterStream.empty())):
-        tweet = myTwitterStream.get().lower()
-        ## removes re-tweet
-        tweet = sub(r'(^[rR][tT] )', '', tweet)
+        tweetV = sub(r'(^[rR][tT] )', '', tweetV)
         ## removes hashtags, arrobas and links
-        tweet = sub(r'(#\S+)|(@\S+)|(http://\S+)', '', tweet)
+        tweetV = sub(r'(#\S+)|(@\S+)|(http://\S+)', '', tweetV)
         ## clean, tag and send text
-        cleanText(tweet)
-        lastTwitterCheck = time()
+        cleanText(tweetV)
+        displayPhrase(tweetV)
+
+        tweetA = sub(r'(^[rR][tT] )', '', tweetA)
+        ## removes hashtags, arrobas and links
+        tweetA = sub(r'(#\S+)|(@\S+)|(http://\S+)', '', tweetA)
+        ## clean, tag and send text
+        cleanText(tweetA)
+        sayPhrase(tweetA)
 
 if __name__=="__main__":
-    visualQ = Queue()
-    audioQ = Queue()
     setup()
-    visualQ.put("oh my god man")
-    audioQ.put("make some noise")
 
     try:
         while(True):
@@ -168,6 +169,6 @@ if __name__=="__main__":
         exit(0)
     except KeyboardInterrupt:
         logFile.close()
-        #myTwitterStream.disconnect()
-        #streamThread.join()
+        myTwitterStream.disconnect()
+        streamThread.join()
         exit(0)
