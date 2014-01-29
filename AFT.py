@@ -87,8 +87,8 @@ def setup():
     secrets = {}
     lastTwitterCheck = time()
 
-    ##flags = pygame.FULLSCREEN|pygame.DOUBLEBUF|pygame.HWSURFACE
-    flags = pygame.DOUBLEBUF|pygame.HWSURFACE
+    flags = pygame.FULLSCREEN|pygame.DOUBLEBUF|pygame.HWSURFACE
+    ##flags = pygame.DOUBLEBUF|pygame.HWSURFACE
 
     pygame.init()
     screen = pygame.display.set_mode((0, 0),flags)
