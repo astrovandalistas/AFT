@@ -14,6 +14,7 @@ from re import sub
 ## What to search for
 SEARCH_TERMS = ['i hate you', 'i want to die', 'you are useless', 'kill you', 'we are done', 'over you']
 FESTIVAL_EN = "voice_kal_diphone"
+FESTIVAL_ES = "voice_cstr_upc_upm_spanish_hts"
 FESTIVALBIN = "./festival"
 FESTIVALCMD = "echo \"(LANG) (SayText \\\"XXXXX\\\")\" | "
 
@@ -76,7 +77,7 @@ def sayPhrase(phrase):
 
     ## then remove accents and nonAscii characters
     phrase = _removeNonAscii(phrase)
-    toSay = (FESTIVALCMD+FESTIVALBIN).replace("LANG",FESTIVAL_EN)
+    toSay = (FESTIVALCMD+FESTIVALBIN).replace("LANG",FESTIVAL_ES)
     toSay = toSay.replace("XXXXX",phrase)
     subprocess.call(toSay, shell=True)
 
