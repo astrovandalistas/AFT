@@ -38,9 +38,9 @@ class TwitterStreamReceiver(TwythonStreamer):
         return self.tweetQ.qsize()
 
 def displayWholePhrase(phrase,bgndColor=(0,0,0),textColor=(255,255,255)):
+    _clearScreen(bgndColor)
     font = pygame.font.Font("./data/arial.ttf", 200)
     mRect = pygame.Rect((0,0), screen.get_size())
-    background.fill(bgndColor)
 
     screenArea = float(mRect.height*mRect.width)
     phraseArea = float(font.size(phrase.decode('utf8'))[0]*font.size(phrase.decode('utf8'))[1])
@@ -77,7 +77,7 @@ def displayWholePhrase(phrase,bgndColor=(0,0,0),textColor=(255,255,255)):
     screen.blit(background, (0, (mRect.height-y)/2))
     pygame.display.flip()
 
-def clearScreen(bgndColor=(0,0,0)):
+def _clearScreen(bgndColor=(0,0,0)):
     background.fill(bgndColor)
     screen.blit(background, (0,0))
     pygame.display.flip()
@@ -193,7 +193,6 @@ def loop():
     global lastTwitterCheck, myTwitterStream, streamThread
 
     if(myTwitterStream.qsize() > 0):
-        clearScreen()
         tweet = myTwitterStream.get().lower()
 	
         tweet = sub(r'(^[rR][tT] )', '', tweet)
