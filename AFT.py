@@ -168,12 +168,13 @@ def loop():
 
     if(myTwitterStream.qsize() > 1):
         tweet = myTwitterStream.get().lower()
-
+	
         tweet = sub(r'(^[rR][tT] )', '', tweet)
         ## removes hashtags, arrobas and links
         tweet = sub(r'(#\S+)|(@\S+)|(http://\S+)', '', tweet)
         ## clean, tag and send text
         cleanText(tweet)
+        #mostrar en pantalla y megafono al mismo tiempo
         displayPhrase(tweet)
         sayPhrase(tweet)
 
