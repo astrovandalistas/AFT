@@ -13,7 +13,7 @@ from math import sqrt, ceil
 from re import sub
 
 ## What to search for
-SEARCH_TERMS = ['arquitectura', 'ciudad', 'ciudad monstruo', '#ciudadposible', '#mextropoli','ciudad de méxico']
+SEARCH_TERMS = ['#ciudadposible', '#mextropoli','ciudad posible']
 FESTIVAL_EN = "voice_kal_diphone"
 FESTIVAL_ES = "voice_cstr_upc_upm_spanish_hts"
 FESTIVALBIN = "./festival"
@@ -37,14 +37,14 @@ class TwitterStreamReceiver(TwythonStreamer):
     def qsize(self):
         return self.tweetQ.qsize()
 
-def displayWholePhrase(phrase,bgndColor=(0,0,0),textColor=(255,255,255)):
+def displayWholePhrase(phrase,bgndColor=(255,255,255),textColor=(0,0,0)):
     _clearScreen(bgndColor)
     font = pygame.font.Font("./data/arial.ttf", 200)
     mRect = pygame.Rect((0,0), screen.get_size())
 
     screenArea = float(mRect.height*mRect.width)
     phraseArea = float(font.size(phrase.decode('utf8'))[0]*font.size(phrase.decode('utf8'))[1])
-    newFontSize = 0.5*sqrt(screenArea/phraseArea)*font.size(phrase.decode('utf8'))[1];
+    newFontSize = 0.75*sqrt(screenArea/phraseArea)*font.size(phrase.decode('utf8'))[1];
     font = pygame.font.Font("./data/arial.ttf", int(newFontSize))
     fontHeight = font.size(phrase.decode('utf8'))[1]
 
