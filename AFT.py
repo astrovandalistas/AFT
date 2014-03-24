@@ -91,11 +91,10 @@ def sayPhrase(phrase):
     subprocess.call(toSay, shell=True)
 
 def setup():
-    global lastTwitterCheck, myTwitterStream, streamThread
+    global myTwitterStream, streamThread
     global background, screen, font
     global logFile
     secrets = {}
-    lastTwitterCheck = time()
 
     flags = pygame.FULLSCREEN|pygame.DOUBLEBUF|pygame.HWSURFACE
     ##flags = pygame.DOUBLEBUF|pygame.HWSURFACE
@@ -145,7 +144,7 @@ def cleanText(text):
 
 def loop():
     _checkEvent()
-    global lastTwitterCheck, myTwitterStream, streamThread
+    global myTwitterStream, streamThread
 
     if(myTwitterStream.qsize() > 2):
         tweetA = myTwitterStream.get().lower()
