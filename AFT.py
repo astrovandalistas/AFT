@@ -9,6 +9,7 @@ from Queue import Queue
 from cPickle import dump, load
 from twython import TwythonStreamer
 from string import printable
+from math import sqrt, ceil
 from re import sub
 
 ## What to search for
@@ -36,6 +37,50 @@ class TwitterStreamReceiver(TwythonStreamer):
     def qsize(self):
         return self.tweetQ.qsize()
 
+def displayWholePhrase(phrase,bgndColor=(0,0,0),textColor=(255,255,255)):
+    font = pygame.font.Font("./data/arial.ttf", 200)
+    mRect = pygame.Rect((0,0), screen.get_size())
+    background.fill(bgndColor)
+
+    screenArea = float(mRect.height*mRect.width)
+    phraseArea = float(font.size(phrase.decode('utf8'))[0]*font.size(phrase.decode('utf8'))[1])
+    newFontSize = 0.5*sqrt(screenArea/phraseArea)*font.size(phrase.decode('utf8'))[1];
+    font = pygame.font.Font("./data/arial.ttf", int(newFontSize))
+    fontHeight = font.size(phrase.decode('utf8'))[1]
+
+    y = mRect.top
+    i = 0
+    text = phrase
+    lineSpacing = -2
+
+    while (len(text) > 0):
+        # determine if the row of text will be outside our area
+        # this shouldn't happen !!!
+        if ((y+fontHeight) > mRect.bottom):
+            break
+
+        # determine maximum width of line
+        while ((font.size(text[:i])[0] < mRect.width) and (i < len(text))):
+            i += 1
+
+        # adjust the wrap to the last word
+        if (i < len(text)):
+            i = text.rfind(" ", 0, i) + 1
+
+        # render on surface
+        mSurface = font.render(text[:i].decode('utf8'), 1, textColor, bgndColor)
+        background.blit(mSurface, (mRect.left, y))
+        y += fontHeight + lineSpacing
+        text = text[i:]
+
+    # render on screen
+    screen.blit(background, (0, (mRect.height-y)/2))
+    pygame.display.flip()
+
+def clearScreen(bgndColor=(0,0,0)):
+    background.fill(bgndColor)
+    screen.blit(background, (0,0))
+    pygame.display.flip()
 
 def displayPhrase(phrase):
     phrase = phrase.replace('\0',' ')
@@ -148,6 +193,7 @@ def loop():
     global lastTwitterCheck, myTwitterStream, streamThread
 
     if(myTwitterStream.qsize() > 0):
+        clearScreen()
         tweet = myTwitterStream.get().lower()
 	
         tweet = sub(r'(^[rR][tT] )', '', tweet)
@@ -156,7 +202,7 @@ def loop():
         ## clean, tag and send text
         cleanText(tweet)
         #mostrar en pantalla y megafono al mismo tiempo
-        displayPhrase(tweet)
+        displayWholePhrase(tweet)
         sayPhrase(tweet)
 
 if __name__=="__main__":
