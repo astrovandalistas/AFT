@@ -131,7 +131,7 @@ def setup():
     logFile = open("data/"+strftime("%Y%m%d-%H%M%S", localtime())+".log", "a")
 
     ## turn up the volume
-    #subprocess.call("amixer set PCM -- -100", shell=True)
+    subprocess.call("amixer set PCM -- -100", shell=True)
 
 def cleanText(text):
     ## removes punctuation
@@ -166,7 +166,7 @@ def loop():
         sayPhrase(tweetA)
         """
 
-    if(myTwitterStream.qsize() > 1):
+    if(myTwitterStream.qsize() > 0):
         tweet = myTwitterStream.get().lower()
 	
         tweet = sub(r'(^[rR][tT] )', '', tweet)
