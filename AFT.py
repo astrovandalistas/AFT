@@ -12,7 +12,7 @@ from string import printable
 from re import sub
 
 ## What to search for
-SEARCH_TERMS = ['i hate you', 'i want to die', 'you are useless', 'kill you', 'we are done', 'over you']
+SEARCH_TERMS = ['#ciudadposible', '#otrohashtag']
 FESTIVAL_EN = "voice_kal_diphone"
 FESTIVAL_ES = "voice_cstr_upc_upm_spanish_hts"
 FESTIVALBIN = "./festival"
@@ -52,7 +52,7 @@ def _checkEvent():
             raise KeyboardInterrupt
 
 def _fadeTextInOut(txt,bgndColor=(0,0,0),textColor=(255,255,255)):
-    mSurface = font.render(txt+" ", 1, textColor, bgndColor)
+    mSurface = font.render(txt.decode('utf8')+" ", 1, textColor, bgndColor)
     mRect = mSurface.get_rect()
     scale = min(float(background.get_width())/mRect.width, float(mRect.width)/background.get_width())
     mSurface = pygame.transform.scale(mSurface,(int(scale*mRect.width),int(scale*mRect.height)))
@@ -70,13 +70,22 @@ def _fadeTextInOut(txt,bgndColor=(0,0,0),textColor=(255,255,255)):
 
 def _removeNonAscii(s):
     return "".join(i for i in s if i in printable)
+def _removeAccents(txt):
+    ## hack! to make festival say accents
+    txt = txt.replace("á","aa")
+    txt = txt.replace("é","ee")
+    txt = txt.replace("í","ii")
+    txt = txt.replace("ó","oo")
+    txt = txt.replace("ú","uu")
+    txt = txt.replace("ñ","ny")
+    return txt
 
 def sayPhrase(phrase):
     ## clean up ?
     phrase = phrase.replace(",","").replace(".","").replace("?","").replace("!","")
 
     ## then remove accents and nonAscii characters
-    phrase = _removeNonAscii(phrase)
+    phrase = _removeNonAscii(_removeAccents(phrase))
     toSay = (FESTIVALCMD+FESTIVALBIN).replace("LANG",FESTIVAL_ES)
     toSay = toSay.replace("XXXXX",phrase)
     subprocess.call(toSay, shell=True)
