@@ -127,7 +127,7 @@ def _removeAccents(txt):
 
 def sayPhrase(phrase):
     ## clean up ?
-    phrase = phrase.replace(",","").replace(".","").replace("?","").replace("!","")
+    phrase = phrase.replace(",","").replace(".","").replace("?","").replace("!","").replace("#","").replace("@","")
 
     ## then remove accents and nonAscii characters
     phrase = _removeNonAscii(_removeAccents(phrase))
