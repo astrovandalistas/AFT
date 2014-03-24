@@ -146,32 +146,11 @@ def cleanText(text):
 def loop():
     _checkEvent()
     global lastTwitterCheck, myTwitterStream, streamThread
-    """
-    if(myTwitterStream.qsize() > 2):
-        tweetA = myTwitterStream.get().lower()
-        tweetV = myTwitterStream.get().lower()
-
-        tweetV = sub(r'(^[rR][tT] )', '', tweetV)
-        ## removes hashtags, arrobas and links
-        tweetV = sub(r'(#\S+)|(@\S+)|(http://\S+)', '', tweetV)
-        ## clean, tag and send text
-        cleanText(tweetV)
-        displayPhrase(tweetV)
-
-        tweetA = sub(r'(^[rR][tT] )', '', tweetA)
-        ## removes hashtags, arrobas and links
-        tweetA = sub(r'(#\S+)|(@\S+)|(http://\S+)', '', tweetA)
-        ## clean, tag and send text
-        cleanText(tweetA)
-        sayPhrase(tweetA)
-        """
 
     if(myTwitterStream.qsize() > 0):
         tweet = myTwitterStream.get().lower()
 	
         tweet = sub(r'(^[rR][tT] )', '', tweet)
-        ## removes hashtags, arrobas and links
-        #tweet = sub(r'(#\S+)|(@\S+)|(http://\S+)', '', tweet)
         #solo quitar links:
         tweet = sub(r'(http://\S+)', '', tweet)
         ## clean, tag and send text
