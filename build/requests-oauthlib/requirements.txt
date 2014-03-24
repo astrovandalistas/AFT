@@ -1,2 +1,0 @@
-requests
-oauthlib[rsa]>=0.4.2
