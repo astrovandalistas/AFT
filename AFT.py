@@ -12,7 +12,7 @@ from string import printable
 from re import sub
 
 ## What to search for
-SEARCH_TERMS = ['#ciudadposible', '#otrohashtag']
+SEARCH_TERMS = ['arquitectura', '#ciudadposible', '#mextropoli','ciudad de méxico']
 FESTIVAL_EN = "voice_kal_diphone"
 FESTIVAL_ES = "voice_cstr_upc_upm_spanish_hts"
 FESTIVALBIN = "./festival"
@@ -131,7 +131,7 @@ def setup():
     logFile = open("data/"+strftime("%Y%m%d-%H%M%S", localtime())+".log", "a")
 
     ## turn up the volume
-    subprocess.call("amixer set PCM -- -100", shell=True)
+    #subprocess.call("amixer set PCM -- -100", shell=True)
 
 def cleanText(text):
     ## removes punctuation
@@ -146,7 +146,7 @@ def cleanText(text):
 def loop():
     _checkEvent()
     global lastTwitterCheck, myTwitterStream, streamThread
-
+    """
     if(myTwitterStream.qsize() > 2):
         tweetA = myTwitterStream.get().lower()
         tweetV = myTwitterStream.get().lower()
@@ -164,6 +164,18 @@ def loop():
         ## clean, tag and send text
         cleanText(tweetA)
         sayPhrase(tweetA)
+        """
+
+    if(myTwitterStream.qsize() > 1):
+        tweet = myTwitterStream.get().lower()
+
+        tweet = sub(r'(^[rR][tT] )', '', tweet)
+        ## removes hashtags, arrobas and links
+        tweet = sub(r'(#\S+)|(@\S+)|(http://\S+)', '', tweet)
+        ## clean, tag and send text
+        cleanText(tweet)
+        displayPhrase(tweet)
+        sayPhrase(tweet)
 
 if __name__=="__main__":
     setup()
