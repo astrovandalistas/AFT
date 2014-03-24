@@ -9,10 +9,11 @@ from Queue import Queue
 from cPickle import dump, load
 from twython import TwythonStreamer
 from string import printable
+from math import sqrt, ceil
 from re import sub
 
 ## What to search for
-SEARCH_TERMS = ['#ciudadposible', '#otrohashtag']
+SEARCH_TERMS = ['arquitectura', 'ciudad', 'ciudad monstruo', '#ciudadposible', '#mextropoli','ciudad de méxico']
 FESTIVAL_EN = "voice_kal_diphone"
 FESTIVAL_ES = "voice_cstr_upc_upm_spanish_hts"
 FESTIVALBIN = "./festival"
@@ -36,6 +37,50 @@ class TwitterStreamReceiver(TwythonStreamer):
     def qsize(self):
         return self.tweetQ.qsize()
 
+def displayWholePhrase(phrase,bgndColor=(0,0,0),textColor=(255,255,255)):
+    _clearScreen(bgndColor)
+    font = pygame.font.Font("./data/arial.ttf", 200)
+    mRect = pygame.Rect((0,0), screen.get_size())
+
+    screenArea = float(mRect.height*mRect.width)
+    phraseArea = float(font.size(phrase.decode('utf8'))[0]*font.size(phrase.decode('utf8'))[1])
+    newFontSize = 0.5*sqrt(screenArea/phraseArea)*font.size(phrase.decode('utf8'))[1];
+    font = pygame.font.Font("./data/arial.ttf", int(newFontSize))
+    fontHeight = font.size(phrase.decode('utf8'))[1]
+
+    y = mRect.top
+    i = 0
+    text = phrase
+    lineSpacing = -2
+
+    while (len(text) > 0):
+        # determine if the row of text will be outside our area
+        # this shouldn't happen !!!
+        if ((y+fontHeight) > mRect.bottom):
+            break
+
+        # determine maximum width of line
+        while ((font.size(text[:i])[0] < mRect.width) and (i < len(text))):
+            i += 1
+
+        # adjust the wrap to the last word
+        if (i < len(text)):
+            i = text.rfind(" ", 0, i) + 1
+
+        # render on surface
+        mSurface = font.render(text[:i].decode('utf8'), 1, textColor, bgndColor)
+        background.blit(mSurface, (mRect.left, y))
+        y += fontHeight + lineSpacing
+        text = text[i:]
+
+    # render on screen
+    screen.blit(background, (0, (mRect.height-y)/2))
+    pygame.display.flip()
+
+def _clearScreen(bgndColor=(0,0,0)):
+    background.fill(bgndColor)
+    screen.blit(background, (0,0))
+    pygame.display.flip()
 
 def displayPhrase(phrase):
     phrase = phrase.replace('\0',' ')
@@ -82,7 +127,7 @@ def _removeAccents(txt):
 
 def sayPhrase(phrase):
     ## clean up ?
-    phrase = phrase.replace(",","").replace(".","").replace("?","").replace("!","")
+    phrase = phrase.replace(",","").replace(".","").replace("?","").replace("!","").replace("#","").replace("@","")
 
     ## then remove accents and nonAscii characters
     phrase = _removeNonAscii(_removeAccents(phrase))
@@ -146,23 +191,17 @@ def loop():
     _checkEvent()
     global myTwitterStream, streamThread
 
-    if(myTwitterStream.qsize() > 2):
-        tweetA = myTwitterStream.get().lower()
-        tweetV = myTwitterStream.get().lower()
-
-        tweetV = sub(r'(^[rR][tT] )', '', tweetV)
-        ## removes hashtags, arrobas and links
-        tweetV = sub(r'(#\S+)|(@\S+)|(http://\S+)', '', tweetV)
+    if(myTwitterStream.qsize() > 0):
+        tweet = myTwitterStream.get().lower()
+	
+        tweet = sub(r'(^[rR][tT] )', '', tweet)
+        #solo quitar links:
+        tweet = sub(r'(http://\S+)', '', tweet)
         ## clean, tag and send text
-        cleanText(tweetV)
-        displayPhrase(tweetV)
-
-        tweetA = sub(r'(^[rR][tT] )', '', tweetA)
-        ## removes hashtags, arrobas and links
-        tweetA = sub(r'(#\S+)|(@\S+)|(http://\S+)', '', tweetA)
-        ## clean, tag and send text
-        cleanText(tweetA)
-        sayPhrase(tweetA)
+        cleanText(tweet)
+        #mostrar en pantalla y megafono al mismo tiempo
+        displayWholePhrase(tweet)
+        sayPhrase(tweet)
 
 if __name__=="__main__":
     setup()
