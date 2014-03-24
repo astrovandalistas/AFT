@@ -172,6 +172,7 @@ def loop():
         tweet = sub(r'(^[rR][tT] )', '', tweet)
         ## removes hashtags, arrobas and links
         #tweet = sub(r'(#\S+)|(@\S+)|(http://\S+)', '', tweet)
+        #solo quitar links:
         tweet = sub(r'(http://\S+)', '', tweet)
         ## clean, tag and send text
         cleanText(tweet)

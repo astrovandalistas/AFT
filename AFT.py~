@@ -12,7 +12,7 @@ from string import printable
 from re import sub
 
 ## What to search for
-SEARCH_TERMS = ['arquitectura', '#ciudadposible', '#mextropoli','ciudad de méxico']
+SEARCH_TERMS = ['arquitectura', 'ciudad', 'ciudad monstruo', '#ciudadposible', '#mextropoli','ciudad de méxico']
 FESTIVAL_EN = "voice_kal_diphone"
 FESTIVAL_ES = "voice_cstr_upc_upm_spanish_hts"
 FESTIVALBIN = "./festival"
@@ -172,6 +172,7 @@ def loop():
         tweet = sub(r'(^[rR][tT] )', '', tweet)
         ## removes hashtags, arrobas and links
         #tweet = sub(r'(#\S+)|(@\S+)|(http://\S+)', '', tweet)
+        tweet = sub(r'(http://\S+)', '', tweet)
         ## clean, tag and send text
         cleanText(tweet)
         #mostrar en pantalla y megafono al mismo tiempo
