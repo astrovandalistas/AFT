@@ -14,12 +14,12 @@
     </div>
     <div class="container">
       <div class="container-row">
-        <div id="word4" class="word styled-text word4"></div>
-        <div id="word5" class="word styled-text word4"></div>
-      </div>
-      <div class="container-row">
         <div id="word2" class="word styled-text word4"></div>
         <div id="word3" class="word styled-text word4"></div>
+      </div>
+      <div class="container-row">
+        <div id="word4" class="word styled-text word4"></div>
+        <div id="word5" class="word styled-text word4"></div>
       </div>
     </div>
     <script src="./js/ajax-utils.js"></script>
@@ -39,7 +39,7 @@
           currentPhrase.push(phrases[i].split(' '));
           wordEls.push(document.getElementById('word' + i));
           setWord(i)();
-          if(i > 1) wordEls[i].style.opacity = '0';
+          if(i > 1) setWordOpacity(wordEls[i], 0);
         }
 
         setInterval(function() {
@@ -54,6 +54,8 @@
             }
           });
         }, 30e3);
+
+        setTimeout(updateConversationFormat, 20e3);
       }
 
       function setWord(i) {
@@ -71,9 +73,11 @@
                 clearTimeout(timeouts[t]);
               }
               timeouts[t] = setTimeout(setWord(t % 2), 700);
+              setTimeout(function() {
+                document.getElementById('modal').style.opacity = 0;
+              }, 700);
             }
           } else {
-            document.getElementById('modal').style.opacity = 0;
             timeouts[i] = setTimeout(setWord(i), timeoutValue);
           }
 
@@ -83,6 +87,35 @@
             currentWordIndex[i] = 0;
           }
         }
+      }
+
+      function setWordOpacity(el, v) {
+        el.style.opacity = `${v}`;
+      }
+
+      function updateConversationFormat() {
+        const rand = Math.random();
+        wordEls.forEach((e) => { setWordOpacity(e, 0); });
+
+        if(rand < 0.25) {
+          setWordOpacity(wordEls[0], 1);
+          setWordOpacity(wordEls[1], 1);
+        } else if(rand < 0.5) {
+          setWordOpacity(wordEls[2], 1);
+          setWordOpacity(wordEls[3], 1);
+          setWordOpacity(wordEls[4], 1);
+          setWordOpacity(wordEls[5], 1);
+        } else if(rand < 0.75) {
+          setWordOpacity(wordEls[0], 1);
+          setWordOpacity(wordEls[4], 1);
+          setWordOpacity(wordEls[5], 1);
+        } else {
+          setWordOpacity(wordEls[1], 1);
+          setWordOpacity(wordEls[2], 1);
+          setWordOpacity(wordEls[3], 1);
+        }
+
+        setTimeout(updateConversationFormat, 10e3 + 30e3 * Math.random());
       }
     </script>
   </body>
