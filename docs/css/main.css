@@ -22,14 +22,14 @@ body {
 .word {
   width: 100%;
   height: 50%;
-  font-size: 45vh;
+  font-size: 25vw;
   line-height: 45vh;
 }
 
 #modal-text {
   width: 100%;
   height: 100%;
-  font-size: 95vh;
+  font-size: 55vw;
   line-height: 95vh;
 }
 

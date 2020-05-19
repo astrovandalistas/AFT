@@ -19,7 +19,7 @@
       var PHRASES_LIMIT = 16;
       var TWITTER_SERVICE_URL = "https://aftwitterstream.herokuapp.com/AFT";
       var timeouts = [null, null];
-      var currentWord = [0,0];
+      var currentWordIndex = [0,0];
       var currentPhrase = [];
       var insertIndex = 0;
 
@@ -44,29 +44,29 @@
 
       function setWord(i) {
         return function() {
-          document.getElementById("word"+i).innerHTML = currentPhrase[i][currentWord[i]];
+          document.getElementById("word"+i).innerHTML = currentPhrase[i][currentWordIndex[i]];
           var tWord = document.getElementById("word"+i).innerHTML;
-          var oWord = document.getElementById("word"+(i+1)%2).innerHTML;
+          var oWord = document.getElementById("word"+(i + 1) % 2).innerHTML;
           var timeoutValue = 50 + 50 * Math.random() + 50 * tWord.length;
 
           if(tWord == oWord) {
-            document.getElementById("modal-text").innerHTML = currentPhrase[i][currentWord[i]];
+            document.getElementById("modal-text").innerHTML = currentPhrase[i][currentWordIndex[i]];
             document.getElementById("modal").style.opacity = 1;
             for(var t=0; t<timeouts.length; t++) {
               if(timeouts[t] != null) {
                 clearTimeout(timeouts[t]);
               }
-              timeouts[t] = setTimeout(setWord(t%currentWord.length), 700);
+              timeouts[t] = setTimeout(setWord(t % 2), 700);
             }
           } else {
             document.getElementById("modal").style.opacity = 0;
             timeouts[i] = setTimeout(setWord(i), timeoutValue);
           }
 
-          currentWord[i] = (currentWord[i] + 1);
-          if(currentWord[i] >= currentPhrase[i].length) {
+          currentWordIndex[i] = (currentWordIndex[i] + 1);
+          if(currentWordIndex[i] >= currentPhrase[i].length) {
             currentPhrase[i] = phrases[Math.floor(phrases.length * Math.random())].split(" ");
-            currentWord[i] = 0;
+            currentWordIndex[i] = 0;
           }
         }
       }
