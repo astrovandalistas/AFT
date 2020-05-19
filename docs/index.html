@@ -19,15 +19,16 @@
       var PHRASES_LIMIT = 16;
       var TWITTER_SERVICE_URL = "https://aftwitterstream.herokuapp.com/AFT";
       var timeouts = [null, null];
-      var currentWordIndex = [0,0];
+      var currentWordIndex = [0, 0];
       var currentPhrase = [];
       var insertIndex = 0;
 
       window.onload = function() {
-        currentPhrase[0] = phrases[0].split(" ");
-        currentPhrase[1] = phrases[Math.max(phrases.length - 1,0)].split(" ");
-        setWord(0)();
-        setWord(1)();
+        for(let i = 0; i < timeouts.length; i++) {
+          currentPhrase[i] = phrases[i].split(" ");
+          setWord(i)();
+        }
+
         setInterval(function() {
           ajaxGet(TWITTER_SERVICE_URL, function(tweetPhrase){
             if(phrases.length < PHRASES_LIMIT) {
@@ -47,7 +48,7 @@
           document.getElementById("word"+i).innerHTML = currentPhrase[i][currentWordIndex[i]];
           var tWord = document.getElementById("word"+i).innerHTML;
           var oWord = document.getElementById("word"+(i + 1) % 2).innerHTML;
-          var timeoutValue = 50 + 50 * Math.random() + 50 * tWord.length;
+          var timeoutValue = 80 + 80 * Math.random() + 80 * tWord.length;
 
           if(tWord == oWord) {
             document.getElementById("modal-text").innerHTML = currentPhrase[i][currentWordIndex[i]];
