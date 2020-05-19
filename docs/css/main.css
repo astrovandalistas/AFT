@@ -3,23 +3,16 @@ body {
   background-color: #000;
 }
 
-#modal {
+.container {
   display: block;
   position: absolute;
   width: 100vw;
   height: 100vh;
   top: 0;
   left: 0;
-  z-index: 1000;
 }
 
-#container {
-  display: block;
-  width: 100vw;
-  height: 100vh;
-}
-
-#container-row {
+.container-row {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -35,6 +28,16 @@ body {
 .word4 {
   width: 49%;
   font-size: 12vw;
+}
+
+#modal {
+  display: block;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 1000;
 }
 
 #modal-text {

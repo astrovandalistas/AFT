@@ -8,35 +8,48 @@
     <div id="modal">
       <div id="modal-text" class="styled-text"></div>
     </div>
-    <div id="container">
+    <div class="container">
       <div id="word0" class="word styled-text"></div>
       <div id="word1" class="word styled-text"></div>
+    </div>
+    <div class="container">
+      <div class="container-row">
+        <div id="word4" class="word styled-text word4"></div>
+        <div id="word5" class="word styled-text word4"></div>
+      </div>
+      <div class="container-row">
+        <div id="word2" class="word styled-text word4"></div>
+        <div id="word3" class="word styled-text word4"></div>
+      </div>
     </div>
     <script src="./js/ajax-utils.js"></script>
     <script src="./js/phrases.js"></script>
 
     <script>
-      var PHRASES_LIMIT = 16;
-      var TWITTER_SERVICE_URL = "https://aftwitterstream.herokuapp.com/AFT";
-      var timeouts = [null, null];
-      var currentWordIndex = [0, 0];
-      var currentPhrase = [];
+      const PHRASES_LIMIT = 16;
+      const TWITTER_SERVICE_URL = 'https://aftwitterstream.herokuapp.com/AFT';
+      const timeouts = [null, null, null, null, null, null];
+      const currentWordIndex = [0, 0, 0, 0, 0, 0];
+      const currentPhrase = [];
+      const wordEls = [];
       var insertIndex = 0;
 
       window.onload = function() {
         for(let i = 0; i < timeouts.length; i++) {
-          currentPhrase[i] = phrases[i].split(" ");
+          currentPhrase.push(phrases[i].split(' '));
+          wordEls.push(document.getElementById('word' + i));
           setWord(i)();
+          if(i > 1) wordEls[i].style.opacity = '0';
         }
 
         setInterval(function() {
           ajaxGet(TWITTER_SERVICE_URL, function(tweetPhrase){
             if(phrases.length < PHRASES_LIMIT) {
-              phrases.push(tweetPhrase+" &nbsp;");
+              phrases.push(tweetPhrase+' &nbsp;');
             } else if(phrases.length > PHRASES_LIMIT) {
               phrases = phrases.slice(0, PHRASES_LIMIT);
             } else {
-              phrases[insertIndex] = tweetPhrase+" &nbsp;";
+              phrases[insertIndex] = tweetPhrase+' &nbsp;';
               insertIndex = (insertIndex + 1) % phrases.length;
             }
           });
@@ -45,28 +58,28 @@
 
       function setWord(i) {
         return function() {
-          document.getElementById("word"+i).innerHTML = currentPhrase[i][currentWordIndex[i]];
-          var tWord = document.getElementById("word"+i).innerHTML;
-          var oWord = document.getElementById("word"+(i + 1) % 2).innerHTML;
-          var timeoutValue = 80 + 80 * Math.random() + 80 * tWord.length;
+          document.getElementById('word' + i).innerHTML = currentPhrase[i][currentWordIndex[i]];
+          let tWord = document.getElementById('word' + i).innerHTML;
+          let oWord = document.getElementById('word' + (i + 1) % 2).innerHTML;
+          let timeoutValue = 80 + 200 * Math.random() + 80 * tWord.length;
 
-          if(tWord == oWord) {
-            document.getElementById("modal-text").innerHTML = currentPhrase[i][currentWordIndex[i]];
-            document.getElementById("modal").style.opacity = 1;
-            for(var t=0; t<timeouts.length; t++) {
+          if((i < 2) && (tWord == oWord)) {
+            document.getElementById('modal-text').innerHTML = currentPhrase[i][currentWordIndex[i]];
+            document.getElementById('modal').style.opacity = 1;
+            for(let t = 0; t < 2; t++) {
               if(timeouts[t] != null) {
                 clearTimeout(timeouts[t]);
               }
               timeouts[t] = setTimeout(setWord(t % 2), 700);
             }
           } else {
-            document.getElementById("modal").style.opacity = 0;
+            document.getElementById('modal').style.opacity = 0;
             timeouts[i] = setTimeout(setWord(i), timeoutValue);
           }
 
           currentWordIndex[i] = (currentWordIndex[i] + 1);
           if(currentWordIndex[i] >= currentPhrase[i].length) {
-            currentPhrase[i] = phrases[Math.floor(phrases.length * Math.random())].split(" ");
+            currentPhrase[i] = phrases[Math.floor(phrases.length * Math.random())].split(' ');
             currentWordIndex[i] = 0;
           }
         }
