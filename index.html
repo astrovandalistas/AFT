@@ -27,6 +27,7 @@
     <script src="./js/phrases.js"></script>
 
     <script>
+      const phrases = PHRASES['es'];
       const PHRASES_LIMIT = 16;
       const TWITTER_SERVICE_URL = 'https://aftwitterstream.herokuapp.com/AFT';
       const timeouts = [null, null, null, null, null, null];
@@ -43,20 +44,34 @@
           if(i > 1) setWordOpacity(wordEls[i], 0);
         }
 
-        setInterval(function() {
-          ajaxGet(TWITTER_SERVICE_URL, function(tweetPhrase){
-            if(phrases.length < PHRASES_LIMIT) {
-              phrases.push(tweetPhrase+' &nbsp;');
-            } else if(phrases.length > PHRASES_LIMIT) {
-              phrases = phrases.slice(0, PHRASES_LIMIT);
-            } else {
-              phrases[insertIndex] = tweetPhrase+' &nbsp;';
-              insertIndex = (insertIndex + 1) % phrases.length;
-            }
-          });
-        }, 30e3);
-
+        getInitialTweets();
         setTimeout(updateConversationFormat, 20e3);
+      }
+
+      function getInitialTweets() {
+        ajaxGet(TWITTER_SERVICE_URL+'ALL', function(tweetPhrases) {
+          phrases.length = 0;
+          tweetPhrases.split(',<br>').forEach((p) => {
+            if(p.length > 0 && phrases.length < PHRASES_LIMIT) phrases.push(p);
+          });
+          setTimeout(getTweet, 30e3);
+        });
+      }
+
+      function getTweet() {
+        ajaxGet(TWITTER_SERVICE_URL, function(tweetPhrase) {
+          console.log('got: ' + tweetPhrase);
+
+          if(phrases.length < PHRASES_LIMIT) {
+            phrases.push(tweetPhrase + ' &nbsp;');
+          } else if(phrases.length > PHRASES_LIMIT) {
+            phrases = phrases.slice(0, PHRASES_LIMIT);
+          } else {
+            phrases[insertIndex] = tweetPhrase + ' &nbsp;';
+            insertIndex = (insertIndex + 1) % phrases.length;
+          }
+        });
+        setTimeout(getTweet, 30e3);
       }
 
       function setWord(i) {
