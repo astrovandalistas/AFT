@@ -45,6 +45,13 @@ let popIndex = 0;
 //     }
 //   });
 
+app.get("/", (_, res) => {
+  res.status(200).send({
+    success: true,
+    data: `/ OK`
+  });
+});
+
 app.get("/AFT", (_, res) => {
   res.send(mQueue[popIndex]);
   popIndex = (popIndex + 1) % mQueue.length;
