@@ -1,5 +1,6 @@
 .DS*
-Python/data/20*log
+Python/data/201*log
+Python/data/202*log
 .env
 node_modules
 npm-debug.log
