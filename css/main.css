@@ -1,5 +1,5 @@
 body {
-  margin: 50px;
+  margin: 0;
   background-color: #000;
 }
 
@@ -23,7 +23,6 @@ body {
   height: 50%;
   font-size: 25vw;
   line-height: 45vh;
-  color: #f22;
 }
 
 .word4 {
@@ -53,7 +52,7 @@ body {
   position: relative;
   width: 100%;
   overflow: hidden;
-  color: #f22;
+  color: #fff;
   background-color: rgba(0,0,0,0);
   text-align: center;
   text-transform: lowercase;
