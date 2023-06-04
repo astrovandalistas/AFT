@@ -1,0 +1,60 @@
+body {
+  margin: 0;
+  background-color: #000;
+}
+
+.container {
+  display: block;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+}
+
+.container-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.word {
+  width: 100%;
+  height: 50%;
+  font-size: 25vw;
+  line-height: 45vh;
+}
+
+.word4 {
+  width: 49%;
+  font-size: 12vw;
+}
+
+#modal {
+  display: block;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+#modal-text {
+  width: 100%;
+  height: 100%;
+  font-size: 55vw;
+  line-height: 95vh;
+}
+
+.styled-text {
+  display: block;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  color: #fff;
+  background-color: rgba(0,0,0,0);
+  text-align: center;
+  text-transform: lowercase;
+  vertical-align: middle;
+}
