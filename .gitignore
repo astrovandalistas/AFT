@@ -1,2 +1,5 @@
 .DS*
-data/201*log
+Python/data/20*log
+.env
+node_modules
+npm-debug.log
