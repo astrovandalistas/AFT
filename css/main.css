@@ -52,9 +52,8 @@ body {
   position: relative;
   width: 100%;
   overflow: hidden;
-  color: #fef;
+  color: #fff;
   background-color: rgba(0,0,0,0);
   text-align: center;
   text-transform: lowercase;
-  vertical-align: middle;
 }
