@@ -5,8 +5,9 @@ on:
     branches:
       - main
     paths-ignore:
-      - './**'
-      - '!./www'
+      - 'nodejs/**'
+      - 'Python/**'
+      - '.gitignore'
 
 jobs:
   build:
